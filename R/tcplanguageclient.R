@@ -14,7 +14,7 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
-
+#' @export
 TCPLanguageClient <- R6::R6Class("TCPLanguageClient",
     inherit = languageserver:::LanguageBase,
     private = list(
