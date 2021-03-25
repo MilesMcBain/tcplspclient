@@ -102,11 +102,27 @@ TCPLanguageClient <- R6::R6Class("TCPLanguageClient",
             # placeholder
         },
 
-        handshake = function() {
+        handshake = function(rootUri = getwd()) {
             self$start()
             data <- self$fetch(blocking = TRUE)
             server_capabilities <- self$handle_raw(data)
-            server_capabilities
+            initialise_reponse <- self$send_message(
+                "initialize",
+                params = list(
+                    rootUri = rootUri,
+                    capabilities = server_capabilities,
+                    initializationOptions = NULL,
+                    processId = NULL
+                )
+            )
+            if (is.null(initialise_reponse)) {
+                stop("Did not get 'intialize' response")
+            }
+            self$send_notification(
+                "initialized",
+                params = NULL
+            )
+            initialise_reponse
         },
 
         send_message = function(method, params, timeout, allow_error = FALSE,
